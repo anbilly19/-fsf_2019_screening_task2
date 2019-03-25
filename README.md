@@ -1,14 +1,14 @@
 # -fsf_2019_screening_task2
 FOSSEE summer fellowship 2019 python
 
-##Requirements
+## Requirements
 
 1. [Python 3.6](https://www.python.org/downloads/release/python-360/)
 2. [PyQt5](https://pypi.org/project/PyQt5/)
 3. [matplotlib](https://pypi.org/project/matplotlib/)
 4. [pandas](https://pypi.org/project/pandas/)
 
-##Usage
+## Usage
 
 Keep all files in same folder and run main_app.py like any other python file.
 
