@@ -119,6 +119,11 @@ class mywindow(QtWidgets.QMainWindow):
                     df=pd.read_csv(ff)
                     x=df.iloc[:,temp[0]]
                     y=df.iloc[:,temp[1]]
+            title,ok=self.input_dialog.getText(self,'Custom Title','Enter plot title')
+            if ok:
+                self.ui.plotScatter.canvas.ax.set_title(str(title))
+            else:
+                self.ui.plotScatter.canvas.ax.set_title(x.name +" VS "+y.name)
             self.ui.plotSmooth.canvas.ax.clear()
             self.ui.plotSmooth.canvas.draw()
             self.ui.plotSmooth.canvas.ax.plot(x,y,'-o')
@@ -146,6 +151,11 @@ class mywindow(QtWidgets.QMainWindow):
                     df=pd.read_csv(ff)
                     x=df.iloc[:,temp[0]]
                     y=df.iloc[:,temp[1]]
+            title,ok=self.input_dialog.getText(self,'Custom Title','Enter plot title')
+            if ok:
+                self.ui.plotScatter.canvas.ax.set_title(str(title))
+            else:
+                self.ui.plotScatter.canvas.ax.set_title(x.name +" VS "+y.name)
             self.ui.plotLines.canvas.ax.clear()
             self.ui.plotLines.canvas.draw()
             self.ui.plotLines.canvas.ax.plot(x,y)
