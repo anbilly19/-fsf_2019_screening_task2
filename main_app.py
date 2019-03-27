@@ -13,7 +13,9 @@ class mywindow(QtWidgets.QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.fileName=""
-        self.fname="Liste"
+        self.fileName_plot=""
+        self.pname="plot"
+        self.fname="table"
         self.workName="Li"
         self.model = QtGui.QStandardItemModel(self)
 
@@ -30,10 +32,14 @@ class mywindow(QtWidgets.QMainWindow):
         self.ui.editCheck.stateChanged.connect(self.editData)
         self.ui.actionLoad.triggered.connect(self.loadCsv)
         self.ui.actionSave.triggered.connect(self.writeCsv)
+        self.ui.actionSave_Plot.triggered.connect(self.savePlot)
         self.ui.actionExit.triggered.connect(self.close)
         self.ui.menuClear.triggered.connect(self.clearList)
 
         self.error_dialog = QtWidgets.QErrorMessage(self)
+        self.error_dialog.setWindowModality(QtCore.Qt.ApplicationModal)
+        self.input_dialog = QtWidgets.QInputDialog(self)
+        self.input_dialog.setWindowModality(QtCore.Qt.ApplicationModal)
         
         self.ui.scatterPush.clicked.connect(self.scatterPlot)
         self.ui.linesPush.clicked.connect(self.linesPlot)
@@ -43,9 +49,32 @@ class mywindow(QtWidgets.QMainWindow):
         self.model.appendRow(item)
         self.model.setData(self.model.index(0, 0), "", 0)
         self.ui.tableView.resizeColumnsToContents()
+
+
+    def savePlot(self,fileName_plot):
+        try:
+            index=self.ui.tabObject.currentIndex()
+            if index!=0:
+                fileName_plot, _ = QtWidgets.QFileDialog.getSaveFileName(self, "Save Plot", 
+                                (QtCore.QDir.homePath() + "/" + self.pname + ".png"),"PNG Files (*.png)")
+                if fileName_plot:
+                    self.pname = os.path.splitext(str(fileName_plot))[0].split("/")[-1]
+                    if index==1:
+                        self.ui.plotScatter.canvas.figure.savefig(str(fileName_plot))
+                    elif index==2:
+                        self.ui.plotSmooth.canvas.figure.savefig(str(fileName_plot))
+                    elif index==3:
+                        self.ui.plotLines.canvas.figure.savefig(str(fileName_plot))
+            else:
+                self.error_dialog.showMessage('Please select a tab to save a plot')
+        except Exception as e:
+            print(e)
         
+
     def scatterPlot(self):
         try:
+            
+            self.ui.tabObject.setCurrentIndex(1)
             indices= self.ui.tableView.selectionModel().selection().indexes()
             temp=[]
             for i in indices:
@@ -59,15 +88,24 @@ class mywindow(QtWidgets.QMainWindow):
                     df=pd.read_csv(ff)
                     x=df.iloc[:,temp[0]]
                     y=df.iloc[:,temp[1]]
+            self.ui.plotScatter.canvas.ax.clear()
+            self.ui.plotScatter.canvas.draw()
+            title,ok=self.input_dialog.getText(self,'Custom Title','Enter plot title')
+            if ok:
+                self.ui.plotScatter.canvas.ax.set_title(str(title))
+            else:
+                self.ui.plotScatter.canvas.ax.set_title(x.name +" VS "+y.name)
             self.ui.plotScatter.canvas.ax.scatter(x,y)
             self.ui.plotScatter.canvas.ax.set_xlabel(x.name)
             self.ui.plotScatter.canvas.ax.set_ylabel(y.name)
             self.ui.plotScatter.canvas.draw()
         except Exception as err:
+            print(err)
             self.error_dialog.showMessage('Load a CSV File and make a selection')
 
     def smoothPlot(self):
         try:
+            self.ui.tabObject.setCurrentIndex(2)
             indices= self.ui.tableView.selectionModel().selection().indexes()
             temp=[]
             for i in indices:
@@ -81,16 +119,20 @@ class mywindow(QtWidgets.QMainWindow):
                     df=pd.read_csv(ff)
                     x=df.iloc[:,temp[0]]
                     y=df.iloc[:,temp[1]]
+            self.ui.plotSmooth.canvas.ax.clear()
+            self.ui.plotSmooth.canvas.draw()
             self.ui.plotSmooth.canvas.ax.plot(x,y,'-o')
             self.ui.plotSmooth.canvas.ax.set_xlabel(x.name)
             self.ui.plotSmooth.canvas.ax.set_ylabel(y.name)
             self.ui.plotSmooth.canvas.draw()
         except Exception as err:
+            print(err)
             self.error_dialog.showMessage('Load a CSV File and make a selection')
 
 
     def linesPlot(self):
         try:
+            self.ui.tabObject.setCurrentIndex(3)
             indices= self.ui.tableView.selectionModel().selection().indexes()
             temp=[]
             for i in indices:
@@ -104,11 +146,14 @@ class mywindow(QtWidgets.QMainWindow):
                     df=pd.read_csv(ff)
                     x=df.iloc[:,temp[0]]
                     y=df.iloc[:,temp[1]]
+            self.ui.plotLines.canvas.ax.clear()
+            self.ui.plotLines.canvas.draw()
             self.ui.plotLines.canvas.ax.plot(x,y)
             self.ui.plotLines.canvas.ax.set_xlabel(x.name)
             self.ui.plotLines.canvas.ax.set_ylabel(y.name)
             self.ui.plotLines.canvas.draw()
         except Exception as err:
+            print(err)
             self.error_dialog.showMessage('Load a CSV File and make a selection')
 
     def editData(self,state):
@@ -121,6 +166,7 @@ class mywindow(QtWidgets.QMainWindow):
             
     
     def loadCsv(self, fileName):
+        self.ui.tabObject.setCurrentIndex(0)
         fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Open CSV",
                 (QtCore.QDir.homePath()), "CSV (*.csv *.tsv)")
   
@@ -134,7 +180,7 @@ class mywindow(QtWidgets.QMainWindow):
             with f:
                 self.workName=str(fileName)
                 self.fname = os.path.splitext(str(fileName))[0].split("/")[-1]
-                self.setWindowTitle(self.fname)
+                self.setWindowTitle(self.fname + '-Plotter App')
                 if mytext.count(';') <= mytext.count(','):
                     reader = csv.reader(f, delimiter = ',')
                     self.model.clear()
@@ -221,45 +267,88 @@ class mywindow(QtWidgets.QMainWindow):
         self.menu.popup(QtGui.QCursor.pos())
 
     def deleteRowByContext(self, event):
-        for i in self.ui.tableView.selectionModel().selection().indexes():
-            row = i.row()
-            self.model.removeRow(row)
-            print("Row " + str(row) + " deleted")
-            self.ui.tableView.selectRow(row)
+        indices= self.ui.tableView.selectionModel().selection().indexes()
+    
+        temp=[]
+        for i in indices:
+            if i.row() not in temp:
+                temp.append(i.row())
+            else:
+                continue
+        if len(temp)!=0:
+            for i in temp:
+                self.model.removeRow(i)
+                print("Row " + str(i+1) + " deleted")
+                self.ui.tableView.selectRow(i)
 
     def addRowByContext(self, event):
-        for i in self.ui.tableView.selectionModel().selection().indexes():
-            row = i.row() + 1
-            self.model.insertRow(row)
-            print("Row at " + str(row) + " inserted")
-            self.ui.tableView.selectRow(row)
+        indices= self.ui.tableView.selectionModel().selection().indexes()
+    
+        temp=[]
+        for i in indices:
+            if i.row() not in temp:
+                temp.append(i.row())
+            else:
+                continue
+        if len(temp)!=0:
+            self.model.insertRow(temp[-1]+1)
+            print("Row at " + str(temp[-1]+1+1) + " inserted")
+            self.ui.tableView.selectRow(temp[-1]+1)
 
     def addRowByContext2(self, event):
-        for i in self.ui.tableView.selectionModel().selection().indexes():
-            row = i.row()
-            self.model.insertRow(row)
-            print("Row at " + str(row) + " inserted")
-            self.ui.tableView.selectRow(row)
+
+        indices= self.ui.tableView.selectionModel().selection().indexes()
+        temp=[]
+        for i in indices:
+            if i.row() not in temp:
+                temp.append(i.row())
+            else:
+                continue
+        if len(temp)!=0:
+            self.model.insertRow(temp[-1])
+            print("Row at " + str(temp[-1]+1) + " inserted")
+            self.ui.tableView.selectRow(temp[-1])
 
     def addColumnBeforeByContext(self, event):
-        for i in self.ui.tableView.selectionModel().selection().indexes():
-            col = i.column()
-            self.model.insertColumn(col)
-            print("Column at " + str(col) + " inserted")
+        indices= self.ui.tableView.selectionModel().selection().indexes()
+        temp=[]
+        for i in indices:
+            if i.column() not in temp:
+                temp.append(i.column())
+            else:
+                continue
+        if len(temp)!=0:
+            self.model.insertColumn(temp[-1])
+            print("Column at " + str(temp[-1]+1) + " inserted")
+            self.ui.tableView.selectColumn(temp[-1])
 
     def addColumnAfterByContext(self, event):
-        for i in self.ui.tableView.selectionModel().selection().indexes():
-            col = i.column() + 1
-            self.model.insertColumn(col)
-            print("Column at " + str(col) + " inserted")
-
+        indices= self.ui.tableView.selectionModel().selection().indexes()
+        temp=[]
+        for i in indices:
+            if i.column() not in temp:
+                temp.append(i.column())
+            else:
+                continue
+        if len(temp)!=0:
+            self.model.insertColumn(temp[-1]+1)
+            print("Column at " + str(temp[-1]+1+1) + " inserted")
+            self.ui.tableView.selectColumn(temp[-1]+1)
+                
     def deleteColumnByContext(self, event):
-        for i in self.ui.tableView.selectionModel().selection().indexes():
-            print(i)
-            col = i.column()
-            self.model.removeColumn(col)
-            print("Column at " + str(col) + " removed")
-
+        indices= self.ui.tableView.selectionModel().selection().indexes()
+        temp=[]
+        for i in indices:
+            if i.column() not in temp:
+                temp.append(i.column())
+            else:
+                continue
+        if len(temp)!=0:
+            for i in temp:
+                self.model.removeColumn(i)
+                print("Column " + str(i) + " deleted")
+                self.ui.tableView.selectColumn(i)
+                    
     def copyByContext(self, event):
         for i in self.ui.tableView.selectionModel().selection().indexes():
             row = i.row()
@@ -288,8 +377,11 @@ class mywindow(QtWidgets.QMainWindow):
                 myitem.setText("")
 
     def clearList(self,state):
-        self.model.clear()
-
+        try:
+            self.model.clear()
+        except Exception as e:
+            print(e)
+            
 
 
 def stylesheet(self):
@@ -330,8 +422,11 @@ background-color: green;
 """
     
 import sys
-app=QtWidgets.QApplication(sys.argv)
-application = mywindow('')
-application.setWindowTitle("Plotter App")
-application.show()
-sys.exit(app.exec_())
+try:
+    app=QtWidgets.QApplication(sys.argv)
+    application = mywindow('')
+    application.setWindowTitle("Plotter App")
+    application.show()
+    sys.exit(app.exec_())
+except Exception as e:
+    print(e)
