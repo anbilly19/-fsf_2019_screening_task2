@@ -15,7 +15,7 @@ Direct install by using `pip3 install -r requirements.txt`
 
 ## Usage
 
-Keep all files in same folder and run main_app.py like any other python file.
+Keep all files in same folder and double click main_app.py to run.
 
 Load a CSV file from File-->Load CSV example format shown in _test.csv_.
 
