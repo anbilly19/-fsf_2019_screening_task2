@@ -3,12 +3,15 @@ FOSSEE summer fellowship 2019 python
 
 ## Requirements
 
+Use `git clone https://github.com/anbilly19/fsf_2019_screening_task2.git` to download project to your machine.
+
 1. [Python 3.6](https://www.python.org/downloads/release/python-360/)
 2. [PyQt5](https://pypi.org/project/PyQt5/)
 3. [matplotlib](https://pypi.org/project/matplotlib/)
 4. [pandas](https://pypi.org/project/pandas/)
 
 Direct install by using `pip3 install -r requirements.txt`
+
 
 ## Usage
 
