@@ -8,7 +8,7 @@ FOSSEE summer fellowship 2019 python
 3. [matplotlib](https://pypi.org/project/matplotlib/)
 4. [pandas](https://pypi.org/project/pandas/)
 
-Direct install by using `pip3 install requirements.txt`
+Direct install by using `pip3 install -r requirements.txt`
 
 ## Usage
 
