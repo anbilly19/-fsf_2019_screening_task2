@@ -1,4 +1,4 @@
-# -fsf_2019_screening_task2
+# fsf_2019_screening_task2
 FOSSEE summer fellowship 2019 python
 
 ## Requirements
@@ -7,6 +7,8 @@ FOSSEE summer fellowship 2019 python
 2. [PyQt5](https://pypi.org/project/PyQt5/)
 3. [matplotlib](https://pypi.org/project/matplotlib/)
 4. [pandas](https://pypi.org/project/pandas/)
+
+Direct install by using `pip3 install requirements.txt`
 
 ## Usage
 
@@ -20,6 +22,7 @@ Edited CSV can be saved by File-->Save CSV
 Data can be cleared by Clear-->Clear Data
 
 Select any two columns entirely or just a single cell from each column and press any plot button to get the data on a graph.
+You will be prompted to add a title to the graph if you choose not to a default title will show.
 Plots will appear in the tabs mentioned in the lower part of the window.
 
-Graphs can be saved as PNG files from the toolbar below the plots.
+Graphs can be saved as PNG file from File-->Save Plot.
