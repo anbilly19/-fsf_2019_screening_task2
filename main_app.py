@@ -58,6 +58,7 @@ class mywindow(QtWidgets.QMainWindow):
         
         self.helppage.show()
 
+
     def savePlot(self,fileName_plot):
         try:
             index=self.ui.tabObject.currentIndex()
