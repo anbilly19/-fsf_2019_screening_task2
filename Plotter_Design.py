@@ -163,6 +163,7 @@ class Ui_MainWindow(object):
         self.menuHelp.setTitle(_translate("MainWindow", "Help"))
         self.actionSave.setText(_translate("MainWindow", "Save CSV"))
         self.actionSave.setShortcut(_translate("MainWindow", "Ctrl+S"))
+        self.actionUser_Manual.setShortcut(_translate("MainWindow", "Ctrl+H"))
         self.actionLoad.setText(_translate("MainWindow", "Load CSV"))
         self.actionLoad.setShortcut(_translate("MainWindow", "Ctrl+L"))
         self.actionExit.setText(_translate("MainWindow", "Exit"))
