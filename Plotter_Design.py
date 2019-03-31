@@ -64,7 +64,7 @@ class Ui_MainWindow(object):
         self.tabObject.addTab(self.table, "")
         self.scatter = QtWidgets.QWidget()
         self.scatter.setObjectName("scatter")
-        self.plotScatter = plotScatter(self.scatter)
+        self.plotScatter = plotter(self.scatter)
         self.plotScatter.setGeometry(QtCore.QRect(-1, -1, 891, 711))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
@@ -75,7 +75,7 @@ class Ui_MainWindow(object):
         self.tabObject.addTab(self.scatter, "")
         self.smooth = QtWidgets.QWidget()
         self.smooth.setObjectName("smooth")
-        self.plotSmooth = plotSmooth(self.smooth)
+        self.plotSmooth = plotter(self.smooth)
         self.plotSmooth.setGeometry(QtCore.QRect(-1, -1, 891, 711))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
@@ -86,7 +86,7 @@ class Ui_MainWindow(object):
         self.tabObject.addTab(self.smooth, "")
         self.lines = QtWidgets.QWidget()
         self.lines.setObjectName("lines")
-        self.plotLines = plotLines(self.lines)
+        self.plotLines = plotter(self.lines)
         self.plotLines.setGeometry(QtCore.QRect(-1, -1, 891, 711))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
@@ -163,7 +163,6 @@ class Ui_MainWindow(object):
         self.menuHelp.setTitle(_translate("MainWindow", "Help"))
         self.actionSave.setText(_translate("MainWindow", "Save CSV"))
         self.actionSave.setShortcut(_translate("MainWindow", "Ctrl+S"))
-        self.actionUser_Manual.setShortcut(_translate("MainWindow", "Ctrl+H"))
         self.actionLoad.setText(_translate("MainWindow", "Load CSV"))
         self.actionLoad.setShortcut(_translate("MainWindow", "Ctrl+L"))
         self.actionExit.setText(_translate("MainWindow", "Exit"))
@@ -171,9 +170,8 @@ class Ui_MainWindow(object):
         self.actionClear_Data.setText(_translate("MainWindow", "Clear Data"))
         self.actionClear_Data.setShortcut(_translate("MainWindow", "Ctrl+D"))
         self.actionUser_Manual.setText(_translate("MainWindow", "User Manual"))
+        self.actionUser_Manual.setShortcut(_translate("MainWindow", "Ctrl+H"))
         self.actionSave_Plot.setText(_translate("MainWindow", "Save Plot"))
         self.actionSave_Plot.setShortcut(_translate("MainWindow", "Ctrl+P"))
 
-from plotlines import plotLines
-from plotscatter import plotScatter
-from plotsmooth import plotSmooth
+from plotter import plotter
