@@ -25,7 +25,7 @@ Edited CSV can be saved by File-->Save CSV
 Data can be cleared by Clear-->Clear Data
 
 Select any two columns entirely or just a single cell from each column and press any plot button to get the data on a graph.
-You will be prompted to add a title to the graph if you choose not to a default title will show.
+You will be prompted to add a title to the graph.
 Plots will appear in the tabs mentioned in the lower part of the window.
 
 Graphs can be saved as PNG file from File-->Save Plot.
