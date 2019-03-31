@@ -1,6 +1,6 @@
 import csv, codecs 
 import os
-
+from PlotterHelp import Ui_Form
 from PyQt5 import QtWidgets,QtGui,QtCore
 from Plotter_Design import Ui_MainWindow
 from PyQt5.QtCore import QFile
@@ -35,6 +35,7 @@ class mywindow(QtWidgets.QMainWindow):
         self.ui.actionSave_Plot.triggered.connect(self.savePlot)
         self.ui.actionExit.triggered.connect(self.close)
         self.ui.menuClear.triggered.connect(self.clearList)
+        self.ui.actionUser_Manual.triggered.connect(self.helppage)
 
         self.error_dialog = QtWidgets.QErrorMessage(self)
         self.error_dialog.setWindowModality(QtCore.Qt.ApplicationModal)
@@ -50,6 +51,12 @@ class mywindow(QtWidgets.QMainWindow):
         self.model.setData(self.model.index(0, 0), "", 0)
         self.ui.tableView.resizeColumnsToContents()
 
+    def helppage(self):
+        self.helppage=QtWidgets.QMainWindow()
+        self.uihelp=Ui_Form()
+        self.uihelp.setupUi(self.helppage)
+        
+        self.helppage.show()
 
     def savePlot(self,fileName_plot):
         try:
